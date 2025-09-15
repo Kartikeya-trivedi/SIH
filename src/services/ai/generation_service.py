@@ -1,7 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from matplotlib.path import Path
 import svgwrite
 import os
 from typing import Dict, List, Tuple, Any
@@ -348,34 +345,37 @@ class GenerationService(LoggerMixin):
     
     def _generate_image(self, pattern: List[Dict[str, Any]], size_params: Dict[str, int]) -> str:
         """Generate PNG image of the pattern."""
-        fig, ax = plt.subplots(figsize=(8, 8))
-        ax.set_xlim(0, size_params["width"])
-        ax.set_ylim(0, size_params["height"])
-        ax.set_aspect('equal')
-        ax.axis('off')
+        # For now, just create a simple SVG file instead of PNG
+        # This avoids matplotlib dependency issues
+        os.makedirs("generated_images", exist_ok=True)
+        image_path = f"generated_images/kolam_{random.randint(1000, 9999)}.svg"
+        
+        # Create SVG with the pattern
+        dwg = svgwrite.Drawing(
+            size=(size_params["width"], size_params["height"]),
+            viewBox=f"0 0 {size_params['width']} {size_params['height']}"
+        )
         
         for element in pattern:
             if element["type"] == "circle":
-                circle = patches.Circle(
-                    element["center"], 
-                    element["radius"],
+                dwg.add(dwg.circle(
+                    center=element["center"],
+                    r=element["radius"],
                     **element["style"]
-                )
-                ax.add_patch(circle)
+                ))
             elif element["type"] == "line":
-                ax.plot(
-                    [element["start"][0], element["end"][0]],
-                    [element["start"][1], element["end"][1]],
+                dwg.add(dwg.line(
+                    start=element["start"],
+                    end=element["end"],
                     **element["style"]
-                )
-            # Add more element types as needed
+                ))
+            elif element["type"] == "polygon":
+                dwg.add(dwg.polygon(
+                    points=element["points"],
+                    **element["style"]
+                ))
         
-        # Save image
-        os.makedirs("generated_images", exist_ok=True)
-        image_path = f"generated_images/kolam_{random.randint(1000, 9999)}.png"
-        plt.savefig(image_path, dpi=150, bbox_inches='tight')
-        plt.close()
-        
+        dwg.saveas(image_path)
         return image_path
     
     # Helper methods

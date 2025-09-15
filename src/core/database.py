@@ -5,12 +5,20 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 from src.core.config import settings
 
 # Synchronous database setup
+print(f"DEBUG: Using database URL: {settings.database_url}")
 engine = create_engine(settings.database_url)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Asynchronous database setup
+# Handle both PostgreSQL and SQLite URLs
+if settings.database_url.startswith("postgresql://"):
+    async_database_url = settings.database_url.replace("postgresql://", "postgresql+asyncpg://")
+else:
+    # For SQLite, use aiosqlite
+    async_database_url = settings.database_url.replace("sqlite://", "sqlite+aiosqlite://")
+
 async_engine = create_async_engine(
-    settings.database_url.replace("postgresql://", "postgresql+asyncpg://"),
+    async_database_url,
     echo=settings.debug
 )
 AsyncSessionLocal = async_sessionmaker(

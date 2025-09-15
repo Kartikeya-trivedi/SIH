@@ -13,8 +13,8 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     
     # Database
-    database_url: str = "postgresql://kolam_user:kolam_password@localhost:5432/kolam_db"
-    database_url_test: str = "postgresql://kolam_user:kolam_password@localhost:5432/kolam_test_db"
+    database_url: str = "sqlite:///./kolam.db"
+    database_url_test: str = "sqlite:///./kolam_test.db"
     
     # OpenSearch
     opensearch_url: str = "http://localhost:9200"
