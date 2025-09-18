@@ -1,0 +1,106 @@
+.ai-recreate-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Align items to the top */
+  padding: 50px 20px;
+  min-height: 80vh;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.recreate-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.5rem;
+  color: #333;
+  margin: 0;
+}
+
+.recreate-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  color: #666;
+  margin: 10px 0 30px;
+  max-width: 600px;
+}
+
+.prompt-textarea {
+  width: 100%;
+  max-width: 600px;
+  min-height: 100px;
+  padding: 15px;
+  border: 2px solid #333;
+  border-radius: 25px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  background-color: #fff;
+  color: #333;
+  box-sizing: border-box;
+  resize: vertical;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px; /* Space between textarea and output */
+}
+
+.prompt-textarea:focus {
+  outline: none;
+  border-color: #8B4513;
+}
+
+.recreate-output-container {
+  width: 100%;
+  max-width: 600px;
+  height: 300px; /* Fixed height for the output area */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px; /* Space between output and button */
+}
+
+.generated-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.recreate-button {
+  background-color: #8B4513; /* Maroon */
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 15px 40px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.recreate-button:hover:not(:disabled) {
+  background-color: #a0522d;
+  transform: translateY(-2px);
+}
+
+.recreate-button:disabled {
+  background-color: #a9a9a9;
+  cursor: not-allowed;
+}
+
+/* Loader animation */
+.recreate-loader {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #8B4513;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
