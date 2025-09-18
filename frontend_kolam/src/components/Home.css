@@ -1,0 +1,237 @@
+/* --- Modern Redesign for Home Component --- */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Montserrat:wght@400;500;600&family=Dancing+Script&display=swap');
+
+/* --- Main Home Section (Hero) --- */
+.home-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Responsive columns */
+  gap: 60px;
+  padding: 60px 80px;
+  align-items: center;
+  min-height: 90vh;
+  /* A more subtle background pattern */
+  background-color: #F5F5DC;
+  background-image: radial-gradient(circle, rgba(211, 193, 174, 0.3) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+/* Left Side - Kolam Graphics */
+.kolam-graphics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  justify-items: center;
+  align-items: center;
+  perspective: 1000px; /* For 3D hover effect */
+}
+
+.kolam-pattern {
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.kolam-pattern:hover {
+  transform: scale(1.1) rotateZ(-3deg);
+}
+
+/* Right Side - Content Section */
+.content-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.5rem, 8vw, 5.5rem); /* Responsive font size */
+  font-weight: 700;
+  color: #2c2c2c;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.subtitle {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin: 0 0 25px 5px;
+  color: #555;
+}
+
+.description-box, .platform-description {
+  background-color: rgba(240, 235, 229, 0.8);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(139, 69, 19, 0.2);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.description-box p, .platform-description p {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1.7;
+  color: #333;
+  font-weight: 500;
+}
+
+.learn-more-button {
+  background-color: #8B4513;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 20px 30px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 120px;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px -8px #8B4513;
+  margin-bottom: 30px;
+}
+
+.learn-more-button:hover {
+  background-color: #a0522d;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px -10px #8B4513;
+}
+
+.learn-more-button span {
+  font-size: 2.2rem;
+  margin-top: 8px;
+}
+
+.features-grid {
+  display: flex;
+  flex-wrap: wrap; /* Allows cards to wrap on smaller screens */
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.feature-card {
+  background-color: #8B4513;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.feature-card.clickable {
+  cursor: pointer;
+}
+
+.feature-card.clickable:hover {
+  background-color: #a0522d;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* --- "Our Features" Section --- */
+.features-section-container {
+  padding: 80px;
+  background-color: #F5F5DC;
+}
+
+.features-main-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  text-align: center;
+  color: #2c2c2c;
+  margin-bottom: 60px;
+}
+
+.feature-tile {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  margin-bottom: 80px;
+}
+
+.feature-tile.reverse {
+  flex-direction: row-reverse;
+}
+
+.feature-details {
+  flex: 1;
+  background-color: #2c2c2c;
+  color: #f0f0f0;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.feature-tile:hover .feature-details {
+  transform: translateY(-5px);
+}
+
+.feature-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  border-bottom: 3px solid #8B4513;
+  padding-bottom: 15px;
+}
+
+.feature-points {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.feature-points li {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  margin-bottom: 15px;
+  line-height: 1.8;
+  padding-left: 25px;
+  position: relative;
+}
+
+.feature-points li::before {
+  content: '✓'; /* Modern checkmark */
+  color: #8B4513;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  top: 2px;
+}
+
+.feature-image-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 350px;
+  background-color: #e9e2d7;
+  border-radius: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2rem;
+  color: #a09586;
+  font-weight: 500;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 900px) {
+  .home-container, .features-section-container {
+    padding: 40px;
+  }
+  .feature-tile, .feature-tile.reverse {
+    flex-direction: column;
+  }
+}
+
