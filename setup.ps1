@@ -44,3 +44,4 @@ Write-Host "2. Start Docker services: docker-compose up -d" -ForegroundColor Whi
 Write-Host "3. Run migrations: uv run alembic upgrade head" -ForegroundColor White
 Write-Host "4. Start development server: uv run uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload" -ForegroundColor White
 
+

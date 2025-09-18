@@ -46,6 +46,7 @@ dependencies = [
     "opentelemetry-instrumentation-fastapi>=0.41b0",
     "opentelemetry-instrumentation-sqlalchemy>=0.41b0",
     "aiosqlite>=0.21.0",
+    "modal>=1.1.4",
 ]
 
 [project.optional-dependencies]

@@ -124,6 +124,7 @@ models/
 *.joblib
 logs/
 app.log
+Finetuning/
 
 # Docker
 .dockerignore
@@ -140,4 +141,12 @@ plugins/__pycache__/
 *.temp
 temp/
 tmp/
+kolam.db
+
+#data sets
+kolam_dataset/
+generated_images/
+
+#sql databases
+kolam.db
 
