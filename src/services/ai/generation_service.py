@@ -39,13 +39,10 @@ knowledge = Knowledge(vector_db=vector_db)
 client = genai.Client()
 
 
-def query_knowledge_and_generate(query: str, generate_image: bool = False):
-    """
-    Searches Pinecone knowledge base for query context,
-    then optionally generates an image prompt using Imagen.
-    """
+from io import BytesIO
+import base64
 
-    # Search Pinecone
+def query_knowledge_and_generate(query: str, generate_image: bool = False):
     context = knowledge.search(query)
     explanation = f"Query: {query}\nContext: {context}\n\n{system_prompt}"
 
@@ -58,8 +55,8 @@ def query_knowledge_and_generate(query: str, generate_image: bool = False):
         )
 
         for generated_image in response.generated_images:
-            buf = BytesIO()
-            generated_image.image.save(buf, format="PNG")
-            image_base64 = base64.b64encode(buf.getvalue()).decode("utf-8")
+            # ✅ Use image_bytes instead of image.data
+            image_bytes = generated_image.image.image_bytes
+            image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
     return explanation, image_base64
