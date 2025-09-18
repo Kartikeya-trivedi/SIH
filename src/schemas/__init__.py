@@ -1,24 +1,24 @@
+# src/schemas/__init__.py
+
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 
-
+# -------------------------
 # User Schemas
+# -------------------------
 class UserBase(BaseModel):
     email: EmailStr
     username: str = Field(..., min_length=3, max_length=100)
     full_name: Optional[str] = None
 
-
 class UserCreate(UserBase):
     password: str = Field(..., min_length=8)
-
 
 class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None
     username: Optional[str] = Field(None, min_length=3, max_length=100)
     full_name: Optional[str] = None
-
 
 class UserInDB(UserBase):
     id: int
@@ -30,114 +30,26 @@ class UserInDB(UserBase):
     class Config:
         from_attributes = True
 
-
 class User(UserInDB):
     pass
 
-
+# -------------------------
 # Authentication Schemas
+# -------------------------
 class Token(BaseModel):
     access_token: str
     token_type: str
 
-
 class TokenData(BaseModel):
     username: Optional[str] = None
-
 
 class UserLogin(BaseModel):
     username: str
     password: str
 
-
-# Kolam Image Schemas
-class KolamImageBase(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
-    tags: Optional[List[str]] = None
-    is_public: bool = False
-
-
-class KolamImageCreate(KolamImageBase):
-    pass
-
-
-class KolamImageUpdate(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
-    tags: Optional[List[str]] = None
-    is_public: Optional[bool] = None
-
-
-class KolamImageAnalysis(BaseModel):
-    detected_patterns: List[str]
-    confidence_scores: Dict[str, float]
-    complexity_score: float
-    symmetry_type: str
-    geometric_features: Dict[str, Any]
-
-
-class KolamImageInDB(KolamImageBase):
-    id: int
-    user_id: int
-    filename: str
-    file_path: str
-    file_size: Optional[int] = None
-    mime_type: Optional[str] = None
-    detected_patterns: Optional[List[str]] = None
-    confidence_scores: Optional[Dict[str, float]] = None
-    complexity_score: Optional[float] = None
-    symmetry_type: Optional[str] = None
-    geometric_features: Optional[Dict[str, Any]] = None
-    created_at: datetime
-    updated_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
-
-
-class KolamImage(KolamImageInDB):
-    pass
-
-
-# Generated Kolam Schemas
-class GeneratedKolamBase(BaseModel):
-    pattern_type: str
-    complexity_level: int = Field(..., ge=1, le=10)
-    symmetry_type: Optional[str] = None
-    size: str = Field(default="medium")
-    title: Optional[str] = None
-    description: Optional[str] = None
-
-
-class GeneratedKolamCreate(GeneratedKolamBase):
-    generation_params: Optional[Dict[str, Any]] = None
-
-
-class GeneratedKolamUpdate(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
-    is_favorite: Optional[bool] = None
-
-
-class GeneratedKolamInDB(GeneratedKolamBase):
-    id: int
-    user_id: int
-    svg_data: Optional[str] = None
-    image_path: Optional[str] = None
-    generation_params: Optional[Dict[str, Any]] = None
-    is_favorite: bool = False
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
-
-
-class GeneratedKolam(GeneratedKolamInDB):
-    pass
-
-
+# -------------------------
 # Trivia Question Schemas
+# -------------------------
 class TriviaQuestionBase(BaseModel):
     question_text: str
     question_type: str
@@ -150,10 +62,8 @@ class TriviaQuestionBase(BaseModel):
     category: Optional[str] = None
     tags: Optional[List[str]] = None
 
-
 class TriviaQuestionCreate(TriviaQuestionBase):
     pass
-
 
 class TriviaQuestionUpdate(BaseModel):
     question_text: Optional[str] = None
@@ -167,7 +77,6 @@ class TriviaQuestionUpdate(BaseModel):
     tags: Optional[List[str]] = None
     is_active: Optional[bool] = None
 
-
 class TriviaQuestionInDB(TriviaQuestionBase):
     id: int
     is_active: bool = True
@@ -177,12 +86,12 @@ class TriviaQuestionInDB(TriviaQuestionBase):
     class Config:
         from_attributes = True
 
-
 class TriviaQuestion(TriviaQuestionInDB):
     pass
 
-
+# -------------------------
 # Learning Session Schemas
+# -------------------------
 class LearningSessionBase(BaseModel):
     session_type: str
     questions_answered: int = 0
@@ -192,10 +101,8 @@ class LearningSessionBase(BaseModel):
     streak_days: int = 0
     session_data: Optional[Dict[str, Any]] = None
 
-
 class LearningSessionCreate(LearningSessionBase):
     pass
-
 
 class LearningSessionUpdate(BaseModel):
     questions_answered: Optional[int] = None
@@ -205,7 +112,6 @@ class LearningSessionUpdate(BaseModel):
     streak_days: Optional[int] = None
     session_data: Optional[Dict[str, Any]] = None
     completed_at: Optional[datetime] = None
-
 
 class LearningSessionInDB(LearningSessionBase):
     id: int
@@ -217,18 +123,17 @@ class LearningSessionInDB(LearningSessionBase):
     class Config:
         from_attributes = True
 
-
 class LearningSession(LearningSessionInDB):
     pass
 
-
+# -------------------------
 # Quiz Response Schemas
+# -------------------------
 class QuizAnswer(BaseModel):
     question_id: int
     user_answer: str
     is_correct: bool
     time_taken: Optional[float] = None  # seconds
-
 
 class QuizSession(BaseModel):
     session_id: int
@@ -237,3 +142,31 @@ class QuizSession(BaseModel):
     total_score: float
     completed_at: Optional[datetime] = None
 
+# -------------------------
+# Kolam Generation / Knowledge Schemas
+# -------------------------
+class KolamGenerationRequest(BaseModel):
+    query: str = Field(..., description="User query for generating a Kolam image")
+
+class KolamGenerationResponse(BaseModel):
+    image_url: str = Field(..., description="URL or path of the generated Kolam image")
+
+class KnowledgeRequest(BaseModel):
+    query: str = Field(..., description="User query for knowledge retrieval")
+    generate_image: bool = Field(default=True, description="Whether to generate an image")
+
+class KnowledgeResponse(BaseModel):
+    explanation: str = Field(..., description="Textual explanation of the query")
+    image_base64: Optional[str] = Field(None, description="Base64-encoded generated image, if requested")
+
+# -------------------------
+# Kolam Prediction Schemas
+# -------------------------
+class PredictionResponse(BaseModel):
+    """
+    Response schema for Kolam image prediction.
+    User uploads an image, and we return the top class only.
+    """
+    label: str = Field(..., description="Predicted Kolam class")
+    confidence: float = Field(..., description="Confidence score in %")
+    design_principle: str = Field(..., description="Associated design principle for the predicted class")

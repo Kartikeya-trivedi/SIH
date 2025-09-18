@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     debug: bool = False
     log_level: str = "INFO"
     
+    gemini_api_key: str
+    pinecone_api_key: str
+    mistral_api_key: str
+
     # Database
     database_url: str = "sqlite:///./kolam.db"
     database_url_test: str = "sqlite:///./kolam_test.db"

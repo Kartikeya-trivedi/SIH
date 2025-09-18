@@ -47,6 +47,13 @@ dependencies = [
     "opentelemetry-instrumentation-sqlalchemy>=0.41b0",
     "aiosqlite>=0.21.0",
     "modal>=1.1.4",
+    "agno>=2.0.6",
+    "google-genai>=1.38.0",
+    "pinecone==5.4.2",
+    "pinecone-text>=0.11.0",
+    "openai>=1.108.0",
+    "mistralai>=1.9.10",
+    "pypdf>=6.0.0",
 ]
 
 [project.optional-dependencies]

@@ -1,264 +1,117 @@
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
-from sqlalchemy.orm import Session
-from typing import List, Optional
-import os
+from fastapi import APIRouter, UploadFile, File, HTTPException
+from pathlib import Path
 import uuid
-from datetime import datetime
 
-from src.core.database import get_db
-from src.core.security import verify_token
 from src.schemas import (
-    KolamImage, KolamImageCreate, KolamImageUpdate, 
-    GeneratedKolam, GeneratedKolamCreate, GeneratedKolamUpdate,
-    KolamImageAnalysis
+    KolamGenerationRequest,
+    KolamGenerationResponse,
+    KnowledgeRequest,
+    KnowledgeResponse,
+    PredictionResponse
 )
-from src.services.kolam_service import KolamService
-from src.services.ai.detection_service import DetectionService
-from src.services.ai.generation_service import GenerationService
 
-router = APIRouter()
+from src.services.ai.detection_service import model, classes, predict_image
+from src.services.ai.generation_service import query_knowledge_and_generate
 
 
-def get_current_user_id(token: str = Depends(verify_token)) -> int:
-    """Extract user ID from JWT token."""
-    # This is a simplified version - in a real app, you'd decode the token properly
-    # For now, we'll assume the token contains user info
-    return 1  # Placeholder
+router = APIRouter(prefix="/kolam", tags=["Kolam"])
 
 
-@router.post("/upload", response_model=KolamImage)
-async def upload_kolam_image(
-    file: UploadFile = File(...),
-    title: Optional[str] = Form(None),
-    description: Optional[str] = Form(None),
-    tags: Optional[str] = Form(None),
-    is_public: bool = Form(False),
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
-):
-    """Upload a Kolam image for analysis."""
-    kolam_service = KolamService(db)
-    
-    # Validate file
-    if not file.content_type.startswith('image/'):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="File must be an image"
-        )
-    
-    # Save file
-    file_extension = file.filename.split('.')[-1] if '.' in file.filename else 'jpg'
-    filename = f"{uuid.uuid4()}.{file_extension}"
-    file_path = os.path.join("uploads", filename)
-    
-    os.makedirs("uploads", exist_ok=True)
-    with open(file_path, "wb") as buffer:
-        content = await file.read()
-        buffer.write(content)
-    
-    # Create database record
-    kolam_data = KolamImageCreate(
-        title=title,
-        description=description,
-        tags=tags.split(',') if tags else None,
-        is_public=is_public
+# Hard-coded mapping of class → design principle
+DESIGN_PRINCIPLES = {
+    "alpana": (
+        "Alpana is a traditional Bengali floor art drawn freehand with rice paste. "
+        "Its designs often include floral motifs, geometric shapes, and auspicious symbols. "
+        "The principle emphasizes fluidity, symmetry, and spiritual intent, symbolizing prosperity and inviting positive energy."
+    ),
+    "jhoti": (
+        "Jhoti is an Odia folk art created with rice paste on walls and floors, usually during festivals and rituals. "
+        "The patterns are repetitive and symmetrical, focusing on lotus, conch, and floral forms. "
+        "Its principle lies in freehand linear symmetry and repetition, representing devotion and auspiciousness."
+    ),
+    "kolam": (
+        "Kolam is a South Indian geometric art form drawn daily with rice flour, often using dot grids. "
+        "It emphasizes mathematical precision, symmetry, and continuity through intricate line patterns. "
+        "The principle reflects infinity, prosperity, and harmony with nature, as rice also feeds small creatures."
+    ),
+    "mandana": (
+        "Mandana is a tribal and folk art from Rajasthan and Madhya Pradesh, drawn with chalk, lime, or rice paste on red clay surfaces. "
+        "It emphasizes strong geometric symmetry, balance, and sacred symbolism such as animals, plants, and deities. "
+        "The principle centers on protection, prosperity, and marking sacred spaces in homes and courtyards."
+    ),
+    "muggu": (
+        "Muggu, practiced in Andhra Pradesh and Telangana, is closely related to Kolam and drawn with rice flour or chalk powder. "
+        "Its principle is based on dot-grid geometry, with symmetrical lines and curves connecting the dots. "
+        "Muggu symbolizes auspicious beginnings, mathematical beauty, and the welcoming of prosperity."
+    ),
+    "phulkari": (
+        "Phulkari, meaning 'flower work', is a Punjabi embroidery art created with vibrant silk threads on coarse fabric. "
+        "The designs emphasize geometric arrangements of floral motifs and color balance across the fabric. "
+        "Its principle lies in symmetry, repetition, and cultural storytelling, with each piece representing blessings, emotions, and heritage."
+    ),
+    "pookalam": (
+        "Pookalam is a floral carpet tradition from Kerala, made during the Onam festival using concentric layers of colorful flowers. "
+        "Its design principle is radial symmetry, with patterns growing outward like a mandala. "
+        "It represents harmony, community participation, and celebration of abundance and unity."
+    ),
+    "rangoli": (
+        "Rangoli is a pan-Indian decorative art form made with colored powders, flowers, or grains on the floor. "
+        "It emphasizes symmetry, rhythm, and vibrant color harmony, often inspired by cultural motifs and deities. "
+        "Its principle lies in balance and auspiciousness, welcoming prosperity and joy into the home."
+    ),
+    "thangka": (
+        "Thangka is a Tibetan Buddhist painting on cloth, used as a teaching and meditation tool. "
+        "Its designs follow strict iconographic rules and geometric grids, ensuring divine proportions and symmetry. "
+        "The principle reflects spiritual order, meditation, and balance, serving as a bridge between artistic beauty and sacred symbolism."
     )
-    
-    kolam_image = kolam_service.create_kolam_image(
-        user_id=current_user_id,
-        filename=filename,
-        file_path=file_path,
-        file_size=len(content),
-        mime_type=file.content_type,
-        kolam_data=kolam_data
-    )
-    
-    return kolam_image
+}
 
 
-@router.post("/analyze/{image_id}", response_model=KolamImageAnalysis)
-async def analyze_kolam_image(
-    image_id: int,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
-):
-    """Analyze a Kolam image using AI."""
-    kolam_service = KolamService(db)
-    detection_service = DetectionService()
-    
-    # Get image from database
-    kolam_image = kolam_service.get_kolam_image(image_id, current_user_id)
-    if not kolam_image:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Kolam image not found"
+
+@router.post("/predict", response_model=PredictionResponse)
+async def predict_kolam(file: UploadFile = File(...)):
+    """
+    Upload an image of a Kolam and get:
+    - Highest scored class
+    - Related design principle
+    """
+    try:
+        uploads_dir = Path("uploads")
+        uploads_dir.mkdir(parents=True, exist_ok=True)
+
+        # Save uploaded file
+        temp_path = uploads_dir / f"{uuid.uuid4()}_{file.filename}"
+        with temp_path.open("wb") as f:
+            f.write(await file.read())
+
+        # Predict top-1 class
+        preds = predict_image(model, temp_path, classes, topk=1)
+        label, conf = preds[0]
+
+        # Map to design principle
+        principle = DESIGN_PRINCIPLES.get(
+            label.lower(), "No design principle found for this class."
         )
-    
-    # Perform AI analysis
-    analysis = await detection_service.analyze_image(kolam_image.file_path)
-    
-    # Update database with analysis results
-    kolam_service.update_kolam_analysis(image_id, analysis)
-    
-    return analysis
 
-
-@router.get("/images", response_model=List[KolamImage])
-async def get_user_kolam_images(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
-):
-    """Get user's Kolam images."""
-    kolam_service = KolamService(db)
-    images = kolam_service.get_user_kolam_images(current_user_id, skip=skip, limit=limit)
-    return images
-
-
-@router.get("/images/{image_id}", response_model=KolamImage)
-async def get_kolam_image(
-    image_id: int,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
-):
-    """Get a specific Kolam image."""
-    kolam_service = KolamService(db)
-    image = kolam_service.get_kolam_image(image_id, current_user_id)
-    if not image:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Kolam image not found"
+        return PredictionResponse(
+            label=label,
+            confidence=conf,
+            design_principle=principle,
         )
-    return image
 
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-@router.put("/images/{image_id}", response_model=KolamImage)
-async def update_kolam_image(
-    image_id: int,
-    image_update: KolamImageUpdate,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
-):
-    """Update Kolam image metadata."""
-    kolam_service = KolamService(db)
-    
-    image = kolam_service.get_kolam_image(image_id, current_user_id)
-    if not image:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Kolam image not found"
+# ---------- Knowledge + Generation ----------
+@router.post("/knowledge", response_model=KnowledgeResponse)
+async def kolam_knowledge(req: KnowledgeRequest):
+    """
+    Query Kolam knowledge base and optionally generate an image.
+    """
+    try:
+        explanation, image_base64 = query_knowledge_and_generate(
+            req.query, req.generate_image
         )
-    
-    updated_image = kolam_service.update_kolam_image(image_id, image_update)
-    return updated_image
-
-
-@router.delete("/images/{image_id}")
-async def delete_kolam_image(
-    image_id: int,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
-):
-    """Delete a Kolam image."""
-    kolam_service = KolamService(db)
-    
-    image = kolam_service.get_kolam_image(image_id, current_user_id)
-    if not image:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Kolam image not found"
-        )
-    
-    # Delete file
-    if os.path.exists(image.file_path):
-        os.remove(image.file_path)
-    
-    # Delete database record
-    kolam_service.delete_kolam_image(image_id)
-    
-    return {"message": "Kolam image deleted successfully"}
-
-
-# Generated Kolam endpoints
-@router.post("/generate", response_model=GeneratedKolam)
-async def generate_kolam(
-    generation_data: GeneratedKolamCreate,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
-):
-    """Generate a new Kolam pattern using AI."""
-    kolam_service = KolamService(db)
-    generation_service = GenerationService()
-    
-    # Generate Kolam pattern
-    generated_pattern = await generation_service.generate_pattern(
-        pattern_type=generation_data.pattern_type,
-        complexity_level=generation_data.complexity_level,
-        symmetry_type=generation_data.symmetry_type,
-        size=generation_data.size
-    )
-    
-    # Save generated pattern
-    generated_kolam = kolam_service.create_generated_kolam(
-        user_id=current_user_id,
-        generation_data=generation_data,
-        svg_data=generated_pattern["svg_data"],
-        image_path=generated_pattern["image_path"]
-    )
-    
-    return generated_kolam
-
-
-@router.get("/generated", response_model=List[GeneratedKolam])
-async def get_generated_kolams(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
-):
-    """Get user's generated Kolam patterns."""
-    kolam_service = KolamService(db)
-    generated_kolams = kolam_service.get_user_generated_kolams(
-        current_user_id, skip=skip, limit=limit
-    )
-    return generated_kolams
-
-
-@router.get("/generated/{kolam_id}", response_model=GeneratedKolam)
-async def get_generated_kolam(
-    kolam_id: int,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
-):
-    """Get a specific generated Kolam pattern."""
-    kolam_service = KolamService(db)
-    kolam = kolam_service.get_generated_kolam(kolam_id, current_user_id)
-    if not kolam:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Generated Kolam not found"
-        )
-    return kolam
-
-
-@router.put("/generated/{kolam_id}", response_model=GeneratedKolam)
-async def update_generated_kolam(
-    kolam_id: int,
-    kolam_update: GeneratedKolamUpdate,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user_id)
-):
-    """Update generated Kolam metadata."""
-    kolam_service = KolamService(db)
-    
-    kolam = kolam_service.get_generated_kolam(kolam_id, current_user_id)
-    if not kolam:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Generated Kolam not found"
-        )
-    
-    updated_kolam = kolam_service.update_generated_kolam(kolam_id, kolam_update)
-    return updated_kolam
-
+        return KnowledgeResponse(explanation=explanation, image_base64=image_base64)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

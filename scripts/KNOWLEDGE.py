@@ -1,16 +1,14 @@
-import os
-import base64
-from io import BytesIO
-from dotenv import load_dotenv
 from agno.knowledge.knowledge import Knowledge
 from agno.vectordb.pineconedb import PineconeDb
 from agno.knowledge.embedder.mistral import MistralEmbedder
-from google import genai
-from google.genai import types
+import os
+from dotenv import load_dotenv
+import httpx
+import os
+from pypdf import PdfReader
 
 load_dotenv()
-
-# --- System prompt ---
+# Embed sentence in database
 system_prompt = """
 You are an AI assistant that specializes in retrieving knowledge from a Pinecone-powered knowledge base and using it to generate traditional Indian floor art illustrations, including Kolam, Rangoli, Phuhari, Thupka, and similar designs.
 
@@ -23,7 +21,7 @@ You are an AI assistant that specializes in retrieving knowledge from a Pinecone
 - Ensure that your answers cover all traditional designs, not just Kolam.
 """
 
-# --- Pinecone setup ---
+
 vector_db = PineconeDb(
     name="kolams",
     dimension=1024,
@@ -33,33 +31,24 @@ vector_db = PineconeDb(
     use_hybrid_search=False,
     embedder=MistralEmbedder(api_key=os.getenv("MISTRAL_API_KEY"))
 )
-knowledge = Knowledge(vector_db=vector_db)
 
-# --- Imagen client ---
+knowledge = Knowledge(vector_db=vector_db)
+query = "pookalam"
+context = knowledge.search(query)
+from google import genai
+from google.genai import types
+from PIL import Image
+from io import BytesIO
+
 client = genai.Client()
 
+response = client.models.generate_images(
+    model='imagen-4.0-generate-001',
+    prompt=f'{query}+{context}+{system_prompt}',
+    config=types.GenerateImagesConfig(
+        number_of_images= 1,
+    )
+)
+for generated_image in response.generated_images:
+  generated_image.image.show()
 
-def query_knowledge_and_generate(query: str, generate_image: bool = False):
-    """
-    Searches Pinecone knowledge base for query context,
-    then optionally generates an image prompt using Imagen.
-    """
-
-    # Search Pinecone
-    context = knowledge.search(query)
-    explanation = f"Query: {query}\nContext: {context}\n\n{system_prompt}"
-
-    image_base64 = None
-    if generate_image:
-        response = client.models.generate_images(
-            model="imagen-4.0-generate-001",
-            prompt=f"{query} + {context} + {system_prompt}",
-            config=types.GenerateImagesConfig(number_of_images=1),
-        )
-
-        for generated_image in response.generated_images:
-            buf = BytesIO()
-            generated_image.image.save(buf, format="PNG")
-            image_base64 = base64.b64encode(buf.getvalue()).decode("utf-8")
-
-    return explanation, image_base64
