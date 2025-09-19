@@ -52,7 +52,7 @@
 
 .description-box,
 .platform-description {
-    background-color: rgba(240, 235, 229, 0.8);
+    background-color: rgba(249, 242, 233, 0.8);
     backdrop-filter: blur(5px);
     border: 1px solid #ddd;
     padding: 1.25rem;
@@ -71,7 +71,7 @@
 }
 
 .learn-more-button {
-    background-color: #8B4513;
+    background-color: #780000;
     color: white;
     border: none;
     border-radius: 12px;
@@ -88,12 +88,12 @@
     width: 160px;
     min-height: 120px;
     transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+    box-shadow: 0 4px 15px rgba(120, 0, 0, 0.3);
 }
 
 .learn-more-button:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.4);
+    box-shadow: 0 8px 25px rgba(120, 0, 0, 0.4);
 }
 
 .learn-more-button span {
@@ -108,7 +108,7 @@
 }
 
 .feature-card {
-    background-color: #8B4513;
+    background-color: #780000;
     color: white;
     border-radius: 8px;
     padding: 0.75rem 1rem;
@@ -122,7 +122,7 @@
 }
 
 .feature-card:hover {
-    background-color: #a0522d;
+    background-color: #590000;
     transform: translateX(5px);
 }
 
@@ -206,7 +206,7 @@
 
 .feature-content li::before {
     content: '→';
-    color: #8B4513;
+    color: #780000;
     font-weight: bold;
     margin-right: 0.75rem;
     margin-top: -2px;

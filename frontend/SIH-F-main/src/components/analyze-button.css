@@ -1,6 +1,6 @@
 .analyze-btn {
   margin-top: 15px;
-  background-color: #4a6741;  /* A green shade for the analyze button */
+  background-color: #780000;  /* Updated to new theme button color */
   color: white;
   border: none;
   border-radius: 30px;
@@ -14,7 +14,7 @@
 }
 
 .analyze-btn:hover {
-  background-color: #5b7d50;
+  background-color: #590000;
   transform: translateY(-2px);
 }
 

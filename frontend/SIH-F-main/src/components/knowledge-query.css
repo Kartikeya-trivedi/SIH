@@ -2,7 +2,7 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
+    background-color: #F9F2E9;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
@@ -16,14 +16,16 @@
 .query-input {
     flex: 1;
     padding: 12px 15px;
-    border: 1px solid #ddd;
+    border: 1px solid #1E1E1E;
     border-radius: 8px;
     font-size: 16px;
     font-family: 'Montserrat', sans-serif;
+    background-color: #1E1E1E;
+    color: #F9F2E9;
 }
 
 .query-button {
-    background-color: #8B4513;
+    background-color: #780000;
     color: white;
     border: none;
     border-radius: 8px;
@@ -34,7 +36,7 @@
 }
 
 .query-button:hover {
-    background-color: #a0522d;
+    background-color: #590000;
 }
 
 .query-button:disabled {
@@ -53,7 +55,7 @@
 .knowledge-response {
     margin-top: 20px;
     padding: 20px;
-    background-color: #f9f5f0;
+    background-color: #F9F2E9;
     border-radius: 8px;
 }
 
