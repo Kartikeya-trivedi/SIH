@@ -5,9 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node fix-case-sensitivity.js",
+    "prebuild": "node vercel-fix.js",
     "build": "vite build",
-    "vercel-build": "bash ./vercel-build.sh",
     "lint": "eslint .",
     "preview": "vite preview"
   },

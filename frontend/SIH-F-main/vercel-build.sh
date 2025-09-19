@@ -14,3 +14,4 @@ ln -sf quiz.jsx Quiz.jsx
 # Return to root directory and run the regular build
 cd ../..
 npm run build
+npm run build
