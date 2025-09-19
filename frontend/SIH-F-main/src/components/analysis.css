@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Montserrat:wght@400;500;600&display=swap');
+
+.analysis-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+  padding: 2rem;
+  background-color:  #F5F5DC;
+  background-image: radial-gradient(#d3c7b3 1px, transparent 1px);
+  background-size: 16px 16px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.analysis-card {
+  background-color: #fff;
+  border-radius: 24px; /* Softer corners */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 650px; /* Made the card wider */
+  text-align: center;
+  border: 1px solid #f0e9dd;
+  transition: all 0.3s ease;
+}
+
+.image-display {
+  border: 0px solid #eee;
+  border-radius: 18px; /* Matching softer corners */
+  margin-bottom: 2rem;
+  padding: 0rem;
+}
+
+.image-display img {
+  width: 100%;
+  height:max-content;
+  max-height: 550px;
+  object-fit:scale-down;
+  border-radius: 32px;
+}
+
+.result-box {
+  background-color: #f9f6f1;
+  border-radius: 18px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.result-box p {
+  margin: 0.4rem 0;
+  color: #555;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.result-box strong {
+  color: #333;
+  font-weight: 600; /* Bolder text for emphasis */
+}
+
+.analyze-another-btn {
+  background-color: #8B4513;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 1rem 2.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1.5rem;
+  box-shadow: 0 4px 15px rgba(139, 69, 19, 0.2);
+}
+
+.analyze-another-btn:hover {
+  background-color: #a0522d;
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(139, 69, 19, 0.25);
+}
+

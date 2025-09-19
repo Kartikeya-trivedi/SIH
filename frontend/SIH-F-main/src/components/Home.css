@@ -1,0 +1,198 @@
+/* Font Imports */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Montserrat:wght@400;500;600&family=Dancing+Script&display=swap');
+
+/* Main Home Container */
+.home-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  padding: 4rem 5%;
+  align-items: center;
+  min-height: 90vh;
+  background-color: #fdfaf3;
+}
+
+/* Video Section */
+.video-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f0e9dd;
+}
+
+.kolam-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* Right Side - Content Section */
+.content-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 4.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: #2c2c2c;
+  line-height: 1.1;
+}
+
+.subtitle {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.6rem;
+  margin: 0 0 1.5rem 0;
+  color: #555;
+}
+
+.description-box,
+.platform-description {
+  background-color: #f8f5f0;
+  border: 1px solid #e9e2d7;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.description-box p,
+.platform-description p {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  font-size: 1rem;
+}
+
+/* --- UPDATED BUTTON LAYOUT --- */
+.home-cta-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Make the first button span the full width of the grid */
+.home-cta-buttons .feature-card-cta:first-child {
+    grid-column: 1 / span 2;
+}
+
+.feature-card-cta {
+    background-color: #8B4513;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 0.8rem 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center icon and text */
+    gap: 0.75rem;
+}
+
+.feature-card-cta:hover {
+    background-color: #a0522d;
+    transform: translateY(-2px);
+}
+
+
+/* --- Features Section --- */
+.features-section {
+    padding: 4rem 5%;
+    background-color: #f8f5f0;
+}
+
+.features-main-title {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    color: #333;
+    margin-bottom: 3rem;
+}
+
+.features-grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.feature-tile {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+    padding: 2rem;
+}
+
+.feature-tile.reverse {
+    grid-template-columns: 1fr 1fr; /* Explicitly set for reverse */
+}
+.feature-tile.reverse .feature-content {
+    order: 2;
+}
+.feature-tile.reverse .feature-image-placeholder {
+    order: 1;
+}
+
+.feature-content h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #2c2c2c;
+    margin-bottom: 1rem;
+}
+
+.feature-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-content li {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.feature-image-placeholder {
+    background-color: #e9e2d7;
+    border-radius: 12px;
+    height: 100%;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #aaa;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .home-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    .content-section {
+        align-items: center;
+    }
+    .feature-tile, .feature-tile.reverse {
+        grid-template-columns: 1fr;
+    }
+    .feature-tile.reverse .feature-content,
+    .feature-tile.reverse .feature-image-placeholder {
+        order: initial; /* Reset order for stacked layout */
+    }
+}
+

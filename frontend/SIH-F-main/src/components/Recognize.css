@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Montserrat:wght@400;500&display=swap');
+
+.recognize-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 90vh;
+  padding: 2rem 1rem;
+  background-color: #fdfaf3; /* Beige background */
+  /* Creates the dot grid pattern background */
+  background-image: radial-gradient(#d3c7b3 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+}
+
+.recognize-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.recognize-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 2.5rem;
+  max-width: 450px;
+}
+
+/* Hides the old display area from the previous design */
+.display-area {
+  display: none;
+}
+
+.recognize-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  width: 100%;
+  max-width: 500px; /* Controls the wrapping of buttons */
+}
+
+.recognize-button {
+  background-color: #8B4513;
+  color: white;
+  border: none;
+  border-radius: 50px; /* More rounded buttons */
+  padding: 1.5rem 1.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem; /* Space between icon and text */
+  flex-grow: 1; /* Allows buttons to share space */
+}
+
+/* Target the third button to take the full width on its own line */
+.recognize-button:nth-child(3) {
+    flex-basis: 100%;
+}
+
+
+.recognize-button:hover:not(:disabled) {
+  background-color: #a0522d;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.recognize-button:disabled {
+  background-color: #c9b7a7;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #d9534f;
+  background-color: #f2dede;
+  border: 1px solid #ebccd1;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Modern Loading Spinner - kept for functionality */
+.loading-spinner {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #8B4513;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
