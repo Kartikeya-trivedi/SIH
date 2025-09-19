@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import quizData from './quizData';
-import './quiz.css';
+import './Quiz.css';
 
 const Quiz = ({ level }) => {
     const [currentLevel, setCurrentLevel] = useState(level - 1);
