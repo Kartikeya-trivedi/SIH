@@ -1,5 +1,5 @@
 .quiz-card {
-  background: #1a1a1a;
+  background: #1E1E1E;
   color: white;
   border-radius: 20px;
   padding: 2rem;
@@ -13,7 +13,7 @@
 }
 
 .quiz-card h3 {
-  color: red;
+  color: #780000;
   margin: 0.5rem 0;
 }
 
@@ -45,6 +45,6 @@
 }
 
 .opt-label {
-  color: red;
+  color: #780000;
   font-weight: bold;
 }
