@@ -124,7 +124,7 @@ models/
 *.joblib
 logs/
 app.log
-Finetuning/
+
 
 # Docker
 .dockerignore
@@ -149,4 +149,5 @@ generated_images/
 
 #sql databases
 kolam.db
+
 
