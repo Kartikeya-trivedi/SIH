@@ -1,13 +1,43 @@
 .ai-recreate-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start; /* Align items to the top */
-  padding: 50px 20px;
+  align-items: center; /* Center horizontally */
+  justify-content: center; /* Center vertically - changed from flex-start */
+  padding: 10px; /* Reduced padding */
   min-height: 80vh;
   width: 100%;
   box-sizing: border-box;
   text-align: center;
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto; /* Center the container horizontally */
+  overflow: hidden; /* Prevent scrollbars from negative margins */
+}
+
+/* Animation class for title when hidden - dissolve effect */
+.title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  margin: 0 auto 40px; /* Increased bottom margin from 15px to 40px to move title higher above prompt */
+  width: 100%;
+  max-width: 600px; /* Match with prompt container */
+  height: auto; /* Ensure proper height for content */
+  white-space: normal; /* Allow wrapping */
+  position: relative;
+  transform: translateY(0); /* Explicit initial position */
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.title-hidden {
+  opacity: 0; /* Fully transparent when hidden */
+  transform: translateY(-20px); /* Slight movement up when hidden */
+  pointer-events: none; /* Don't capture mouse events */
+  height: 0; /* Reduce height when hidden */
+  margin: 0; /* Remove margin when hidden */
+  transition: all 0.7s ease; /* Smooth transition for all properties */
 }
 
 .recreate-title {
@@ -15,21 +45,71 @@
   font-size: 3.5rem;
   color: #333;
   margin: 0;
+  text-align: center;
+  width: 100%;
+  transform: translateY(0); /* Explicit initial position */
+  transition: opacity 0.8s ease, transform 0.8s ease, filter 0.8s ease, text-shadow 0.8s ease;
+  text-shadow: 0 0 0 rgba(0,0,0,0);
 }
 
 .recreate-subtitle {
   font-family: 'Montserrat', sans-serif;
   font-size: 1.1rem;
   color: #666;
-  margin: 10px 0 30px;
+  margin: 0; /* Removed top margin */
   max-width: 600px;
+  text-align: center;
+  width: 100%;
+  transition: opacity 0.8s ease, transform 0.8s ease, filter 0.8s ease, text-shadow 0.8s ease;
+  transition-delay: 0.1s; /* Slightly delayed for staggered effect but faster */
+  text-shadow: 0 0 0 rgba(0,0,0,0);
 }
 
-.prompt-textarea {
+/* Add special dissolve effects for title text elements */
+.title-hidden .recreate-title {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.97);
+  filter: blur(6px);
+  text-shadow: 0 5px 10px rgba(0,0,0,0.3);
+}
+
+.title-hidden .recreate-subtitle {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.98);
+  filter: blur(5px);
+  text-shadow: 0 3px 8px rgba(0,0,0,0.3);
+}
+
+/* Prompt container with animation */
+.prompt-container {
   width: 100%;
   max-width: 600px;
-  min-height: 100px;
-  padding: 15px;
+  margin: 20px auto 10px; /* Reduced top and bottom margins */
+  position: relative;
+  transform: translateY(0); /* Explicit initial position */
+  transition: transform 0.8s ease; /* Simplified transition with smoother easing */
+  transition-delay: 0.3s; /* Quick start for better responsiveness */
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Ensure vertical centering of children */
+  padding-bottom: 0; /* Removed padding completely */
+  z-index: 5; /* Higher z-index to ensure it's always on top */
+  left: 0; /* Ensure no offset */
+  right: 0; /* Ensure no offset */
+}
+
+/* Animation class for prompt when active */
+.prompt-active {
+  transform: translateY(-20px); /* Further reduced upward movement to minimize gap */
+  position: relative; /* Added position relative for z-index to work */
+  z-index: 5; /* Higher z-index to ensure prompt stays on top */
+}
+
+.prompt-textarea { 
+  width: 100%;
+  max-width: 600px;
+  min-height: 70px; /* Reduced height for more compact appearance */
+  padding: 10px 15px; /* Reduced padding */
   border: 2px solid #333;
   border-radius: 25px;
   font-family: 'Montserrat', sans-serif;
@@ -39,7 +119,11 @@
   box-sizing: border-box;
   resize: vertical;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px; /* Space between textarea and output */
+  transition: border-color 0.3s ease;
+  margin: 0; /* Reset margin to ensure flexbox centering works */
+  position: relative; /* Added position relative */
+  z-index: 5; /* Higher z-index to ensure it's visible */
+  display: block; /* Ensure block display */
 }
 
 .prompt-textarea:focus {
@@ -50,25 +134,55 @@
 .recreate-output-container {
   width: 100%;
   max-width: 600px;
-  min-height: 300px; /* Min height for the output area */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px; /* Space between output and button */
+  margin: 0 auto; /* Center horizontally with auto left/right margins */
+  gap: 0; /* Removed gap between elements */
+  opacity: 0; /* Start invisible */
+  animation: fadeIn 0.8s ease-in forwards;
+  animation-delay: 1.5s; /* Reduced delay to appear sooner */
+  margin-top: -10px; /* Negative margin to pull output up closer to prompt */
+  position: relative; /* Added position relative for z-index to work */
+  z-index: 1; /* Lower z-index to ensure it stays below prompt */
+  padding-top: 0; /* Removed padding to minimize space */
+}
+
+/* Animation to fade in the output container */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.image-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-radius: 15px;
+  overflow: hidden;
+  margin: 0 0 10px 0; /* Explicit zero margins except bottom */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  max-height: 400px; /* Increased height to show more of the image */
 }
 
 .generated-image {
-  max-width: 100%;
-  max-height: 300px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  margin-bottom: 20px;
 }
 
+/* Additional spacing adjustment for image wrapper */
+.recreate-output-container .image-wrapper {
+  margin-top: -5px; /* Small negative margin to pull image up */
+  padding: 0; /* No padding */
+  margin-bottom: 8px; /* Reduced bottom margin */
+}
+
+/* Main action button with animation */
 .recreate-button {
-  background-color: #8B4513; /* Maroon */
+  background-color: #8B4513;
   color: white;
   border: none;
   border-radius: 20px;
@@ -77,8 +191,17 @@
   font-size: 1.2rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease, background-color 0.3s ease;
+  transition-delay: 0.8s; /* Quicker fade to match faster animations */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  opacity: 1;
+  position: relative;
+  margin: 20px auto; /* Center horizontally with equal top/bottom margins */
+  display: block; /* Ensure button takes full width for margin auto to work */
+  max-width: 280px; /* Slightly increased width for better appearance */
+  text-align: center; /* Ensure text is centered within button */
+  left: 0; /* Ensure no offset */
+  right: 0; /* Ensure no offset */
 }
 
 .recreate-button:hover:not(:disabled) {
@@ -89,6 +212,36 @@
 .recreate-button:disabled {
   background-color: #a9a9a9;
   cursor: not-allowed;
+}
+
+/* Animation class for button fade out */
+.button-hidden {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none; /* Prevent clicks when hidden */
+}
+
+/* Reset button for creating a new design */
+.recreate-reset-button {
+  background-color: #666;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 25px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  margin: 10px auto 0; /* Center horizontally with auto left/right margins */
+  display: block; /* Ensure button takes full width for margin auto to work */
+  max-width: 200px; /* Limit width for better appearance */
+}
+
+.recreate-reset-button:hover {
+  background-color: #777;
+  transform: translateY(-2px);
 }
 
 /* Loader animation */
@@ -107,7 +260,7 @@
   width: 100%;
   max-width: 600px;
   padding: 15px;
-  margin: 10px 0 20px;
+  margin: 10px auto 20px; /* Center horizontally with auto left/right margins */
   background-color: #fff3f3;
   border-left: 4px solid #e74c3c;
   border-radius: 5px;
@@ -120,26 +273,31 @@
 .recreate-explanation {
   width: 100%;
   max-width: 600px;
-  padding: 20px;
-  margin-top: 10px;
+  padding: 8px 12px; /* Further reduced padding */
+  margin: 2px auto; /* Minimal margins */
   background-color: #f9f5f0;
-  border-radius: 10px;
+  border-radius: 12px; /* Slightly reduced border radius */
   text-align: left;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+  box-sizing: border-box; /* Ensure padding is included in width calculation */
 }
 
 .recreate-explanation h3 {
   color: #8B4513;
   margin-top: 0;
+  margin-bottom: 3px; /* Further reduced bottom margin */
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.5rem;
+  font-size: 1.1rem; /* Further reduced font size */
 }
 
 .recreate-explanation p {
   color: #333;
-  line-height: 1.6;
+  line-height: 1.3; /* Reduced line height for more compact text */
   font-family: 'Montserrat', sans-serif;
-  font-size: 1rem;
+  font-size: 0.9rem; /* Slightly smaller font */
+  margin: 0;
+  max-height: 120px; /* Reduced maximum height */
+  overflow-y: auto;
 }
 
 @keyframes spin {

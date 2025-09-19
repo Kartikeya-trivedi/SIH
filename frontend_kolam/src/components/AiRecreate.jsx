@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import kolamService from '../services/kolamService';
 import './AiRecreate.css';
 
@@ -8,7 +8,12 @@ const AiRecreate = () => {
   const [generatedImage, setGeneratedImage] = useState(null);
   const [error, setError] = useState('');
   const [explanation, setExplanation] = useState('');
-
+  
+  // Animation state
+  const [isPromptActive, setIsPromptActive] = useState(false);
+  const [isButtonVisible, setIsButtonVisible] = useState(true);
+  const promptRef = useRef(null);
+  
   // Function to clean up the explanation text
   const cleanExplanationText = (text) => {
     if (!text) return '';
@@ -49,13 +54,40 @@ const AiRecreate = () => {
     return cleaned;
   };
 
-  const handleCreateClick = async () => {
+  // Handle the animation sequence when button is clicked
+  const handleButtonClick = () => {
     if (!prompt.trim()) {
       alert('Please enter a description for the Kolam pattern.');
       return;
     }
+    
+    // Step 1: Start title fade-out animation immediately
+    setIsPromptActive(true);
+    
+    // Step 2: Wait just a moment before fading button
+    setTimeout(() => {
+      setIsButtonVisible(false);
+      
+      // Step 3: Wait for animations to complete before starting API call
+      setTimeout(() => {
+        handleCreateRequest();
+      }, 800); // Shorter wait time for faster animations
+    }, 800); // Shorter wait time for faster animations
+  };
+  
+  // Reset the UI when user wants to create a new design
+  const handleResetUI = () => {
+    setGeneratedImage(null);
+    setExplanation('');
+    setError('');
+    setIsPromptActive(false);
+    setIsButtonVisible(true);
+  };
+
+  // Actual API request function
+  const handleCreateRequest = async () => {
     setIsLoading(true);
-    setGeneratedImage(null); // Clear previous image while generating a new one
+    setGeneratedImage(null);
     setError('');
     setExplanation('');
 
@@ -89,18 +121,26 @@ const AiRecreate = () => {
 
   return (
     <div className="ai-recreate-container">
-      <h1 className="recreate-title">Let The AI Recreate</h1>
-      <p className="recreate-subtitle">
-        "Simply describe your idea, and let AI craft the design for you."
-      </p>
+      <div className={`title-container ${isPromptActive ? 'title-hidden' : ''}`}>
+        <h1 className="recreate-title">Let The AI Recreate</h1>
+        <p className="recreate-subtitle">
+          "Simply describe your idea, and let AI craft the design for you."
+        </p>
+      </div>
 
-      <textarea
-        className="prompt-textarea"
-        placeholder="A simple Kolam with four intersecting lines, creating a diamond shape in the center..."
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-        disabled={isLoading}
-      />
+      {/* Prompt textarea with animation class */}
+      <div 
+        className={`prompt-container ${isPromptActive ? 'prompt-active' : ''}`}
+        ref={promptRef}
+      >
+        <textarea
+          className="prompt-textarea"
+          placeholder="A simple Kolam with four intersecting lines, creating a diamond shape in the center..."
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          disabled={isLoading || isPromptActive}
+        />
+      </div>
 
       {/* Display error if any */}
       {error && (
@@ -109,25 +149,35 @@ const AiRecreate = () => {
         </div>
       )}
 
-      {/* The generated image will now appear here */}
+      {/* The generated image will appear here */}
       {generatedImage && !isLoading && (
         <div className="recreate-output-container">
-          <img 
-            src={generatedImage} 
-            alt="Generated Kolam Pattern" 
-            className="generated-image"
-            onError={() => setError('Failed to load the generated image')} 
-          />
+          <div className="image-wrapper">
+            <img 
+              src={generatedImage} 
+              alt="Generated Kolam Pattern" 
+              className="generated-image"
+              onError={() => setError('Failed to load the generated image')} 
+            />
+          </div>
           {explanation && (
             <div className="recreate-explanation">
               <h3>Design Insight</h3>
               <p>{explanation}</p>
             </div>
           )}
+          
+          {/* Reset button to create a new design */}
+          <button
+            className="recreate-reset-button"
+            onClick={handleResetUI}
+          >
+            Create New Design
+          </button>
         </div>
       )}
 
-      {/* Loading indicator appears in the same spot */}
+      {/* Loading indicator */}
       {isLoading && (
         <div className="recreate-output-container">
           <div className="recreate-loader"></div>
@@ -135,13 +185,13 @@ const AiRecreate = () => {
         </div>
       )}
 
-      {/* The button is now always at the bottom */}
+      {/* Main action button with animation class */}
       <button
-        className="recreate-button"
-        onClick={handleCreateClick}
-        disabled={isLoading}
+        className={`recreate-button ${isButtonVisible ? '' : 'button-hidden'}`}
+        onClick={handleButtonClick}
+        disabled={isLoading || isPromptActive}
       >
-        {isLoading ? 'Creating...' : (generatedImage ? 'Recreate' : 'Create')}
+        Let the AI Recreate
       </button>
     </div>
   );
