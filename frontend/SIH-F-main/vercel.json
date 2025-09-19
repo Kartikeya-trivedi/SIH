@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
+  ],
+  "env": {
+    "VITE_USE_MOCK_DATA": "true"
+  },
+  "github": {
+    "silent": true
+  },
+  "build": {
+    "env": {
+      "VITE_USE_MOCK_DATA": "true"
+    }
+  }
+}

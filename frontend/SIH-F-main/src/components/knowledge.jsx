@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title } from 'chart.js';
 import KnowledgeQuery from './knowledge-query';
-import './Knowledge.css';
+import './knowledge.css';
 import './knowledge-query-section.css';
 
 // Register the necessary components for Chart.js
@@ -11,7 +11,20 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarEle
 
 const Knowledge = ({ onLevelSelect }) => {
     const [showLevelSelect, setShowLevelSelect] = useState(false);
+    const [debugInfo, setDebugInfo] = useState(null);
     const navigate = useNavigate();
+
+    // Collect debug information about the environment
+    useEffect(() => {
+        const info = {
+            environment: import.meta.env.MODE || 'unknown',
+            apiUrl: import.meta.env.VITE_API_URL || 'not set',
+            useMockData: import.meta.env.VITE_USE_MOCK_DATA || 'not set',
+            userAgent: navigator.userAgent,
+            timestamp: new Date().toISOString()
+        };
+        setDebugInfo(info);
+    }, []);
 
     const handleStartGameClick = () => {
         setShowLevelSelect(true);
@@ -150,6 +163,16 @@ const Knowledge = ({ onLevelSelect }) => {
     return (
         <div className="knowledge-container">
             <div className="knowledge-content-card">
+                {/* Debug info section - only visible in production to help diagnose issues */}
+                {import.meta.env.PROD && (
+                    <div className="debug-info" style={{ padding: '10px', background: '#f8f9fa', fontSize: '12px', marginBottom: '15px', borderRadius: '4px' }}>
+                        <h4 style={{ margin: '0 0 5px 0' }}>Environment Debug Info</h4>
+                        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+                            {JSON.stringify(debugInfo, null, 2)}
+                        </pre>
+                    </div>
+                )}
+                
                 <div className="user-profile">
                     <img src="https://i.imgur.com/4KeKvtH.png" alt="User Avatar" className="user-avatar" />
                     <div className="user-info">

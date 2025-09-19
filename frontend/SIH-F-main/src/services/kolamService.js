@@ -2,6 +2,19 @@ import apiClient from './api';
 
 const kolamService = {
     /**
+     * Check if the API is available
+     * @returns {Promise} - Promise with health check response
+     */
+    checkApiHealth: async () => {
+        try {
+            return await apiClient.get('/api/v1/health');
+        } catch (error) {
+            console.error('API health check failed:', error);
+            throw error;
+        }
+    },
+    
+    /**
      * Predict the type of Kolam from an uploaded image
      * @param {File} imageFile - The image file to upload
      * @returns {Promise} - Promise with prediction response
