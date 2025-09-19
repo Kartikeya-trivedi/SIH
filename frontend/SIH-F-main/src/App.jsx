@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
-import Home from './components/Home';
-import Knowledge from './components/Knowledge';
-import Recognize from './components/Recognize';
+import Home from './components/home';
+import Knowledge from './components/knowledge';
+import Recognize from './components/recognize';
 import AiRecreate from './components/AiRecreate';
-import Analysis from './components/Analysis';
-import Quiz from './components/Quiz';
+import Analysis from './components/analysis';
+import Quiz from './components/quiz';
 import './App.css';
 
 function App() {

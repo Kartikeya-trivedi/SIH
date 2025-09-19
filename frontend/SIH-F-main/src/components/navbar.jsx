@@ -1,5 +1,5 @@
 import React from 'react';
-import './Navbar.css';
+import './navbar.css';
 
 const Navbar = ({ onNavigate, currentRoute }) => {
   // Helper function to prevent default link behavior and navigate

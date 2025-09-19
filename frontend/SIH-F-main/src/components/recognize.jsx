@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 // Ensure your service file is correctly located at 'src/services/kolamService.js'
 import kolamService from '../services/kolamService'; 
-import './Recognize.css';
+import './recognize.css';
 
 // Helper function to convert a base64 data URL to a File object for the camera capture
 const dataURLtoFile = (dataurl, filename) => {

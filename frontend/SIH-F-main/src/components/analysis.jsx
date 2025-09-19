@@ -1,5 +1,5 @@
-import React from 'react';
-import './Analysis.css';
+import React, { useState, useEffect } from 'react';
+import './analysis.css';
 
 const Analysis = ({ analysisData, onNavigate }) => {
   // Guard clause in case the user navigates here directly without data

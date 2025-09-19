@@ -1,5 +1,5 @@
 import React from 'react';
-import './Home.css';
+import './home.css';
 
 const Home = ({ onNavigate }) => {
   return (

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title } from 'chart.js';
 import KnowledgeQuery from './knowledge-query';
-import './Knowledge.css';
+import './knowledge.css';
 import './knowledge-query-section.css';
 
 // Register the necessary components for Chart.js

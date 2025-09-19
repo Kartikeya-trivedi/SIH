@@ -18,6 +18,14 @@ dist-ssr
 .idea
 .DS_Store
 *.suo
+
+# Case sensitivity fixes - ignore uppercase component files
+src/components/Navbar.jsx
+src/components/Home.jsx
+src/components/Knowledge.jsx
+src/components/Recognize.jsx
+src/components/Analysis.jsx
+src/components/Quiz.jsx
 *.ntvs*
 *.njsproj
 *.sln
