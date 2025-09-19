@@ -1,12 +1,18 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import kolamService from '../services/kolamService';
 import './Recognize.css';
+import './analyze-button.css';
 
-const Recognize = ({ setCurrentRoute }) => {
+const Recognize = ({ onAnalysisSuccess }) => {
   const [imageSrc, setImageSrc] = useState(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [error, setError] = useState('');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const navigate = useNavigate();
 
   // Hidden file input for the upload button
   const fileInputRef = useRef(null);
@@ -18,6 +24,7 @@ const Recognize = ({ setCurrentRoute }) => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      setImageFile(file);
       const reader = new FileReader();
       reader.onload = (e) => {
         setImageSrc(e.target.result);
@@ -64,7 +71,51 @@ const Recognize = ({ setCurrentRoute }) => {
       
       const dataUrl = canvas.toDataURL('image/png');
       setImageSrc(dataUrl);
+      
+      // Convert dataURL to File object
+      canvas.toBlob((blob) => {
+        const file = new File([blob], "captured-image.png", { type: "image/png" });
+        setImageFile(file);
+      });
+      
       stopCamera();
+    }
+  };
+
+  // Function to analyze the image using backend API
+  const analyzeImage = async () => {
+    if (!imageFile) {
+      setError('No image to analyze. Please upload or capture an image first.');
+      return;
+    }
+    
+    try {
+      setIsAnalyzing(true);
+      setError('');
+      
+      console.log('Sending image file for analysis:', imageFile);
+      const response = await kolamService.predictKolam(imageFile);
+      
+      console.log('Raw API response:', response);
+      
+      // If successful, call the onAnalysisSuccess callback with the response data
+      if (response && response.data) {
+        console.log('Processing response data:', response.data);
+        // Make sure confidence is a valid number
+        const processedData = {
+          ...response.data,
+          confidence: typeof response.data.confidence === 'number' ? response.data.confidence : 0,
+          imageUrl: imageSrc,
+        };
+        console.log('Processed data for UI:', processedData);
+        onAnalysisSuccess(processedData);
+      }
+    } catch (err) {
+      console.error('Error analyzing image:', err);
+      console.error('Error details:', err.response?.data || err.message);
+      setError('Failed to analyze the image. Please try again.');
+    } finally {
+      setIsAnalyzing(false);
     }
   };
 
@@ -90,6 +141,13 @@ const Recognize = ({ setCurrentRoute }) => {
       {imageSrc && !isCameraOpen && (
         <div className="image-preview-container">
           <img src={imageSrc} alt="Kolam Preview" className="image-preview" />
+          <button 
+            onClick={analyzeImage} 
+            className="analyze-btn"
+            disabled={isAnalyzing}
+          >
+            {isAnalyzing ? 'Analyzing...' : 'Analyze Image'}
+          </button>
         </div>
       )}
 
@@ -128,7 +186,7 @@ const Recognize = ({ setCurrentRoute }) => {
 
       <button
         className="action-btn small-btn"
-        onClick={() => setCurrentRoute('/recreate')}
+        onClick={() => navigate('/recreate')}
       >
         <span>&#x2699;&#xFE0F;</span>Recreate or complete patterns
       </button>

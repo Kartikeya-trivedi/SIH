@@ -1,0 +1,15 @@
+.knowledge-query-section {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f9f5f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.knowledge-query-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    color: #2c2c2c;
+    margin-bottom: 20px;
+    text-align: center;
+}

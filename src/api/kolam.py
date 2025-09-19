@@ -14,7 +14,7 @@ from src.services.ai.detection_service import model, classes, predict_image
 from src.services.ai.generation_service import query_knowledge_and_generate
 
 
-router = APIRouter(prefix="/kolam", tags=["Kolam"])
+router = APIRouter(tags=["Kolam"])
 
 
 # Hard-coded mapping of class → design principle

@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title } from 'chart.js';
+import KnowledgeQuery from './knowledge-query';
 import './Knowledge.css';
+import './knowledge-query-section.css';
 
 // Register the necessary components for Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title);
 
-const Knowledge = ({ setCurrentRoute, onLevelSelect }) => {
+const Knowledge = ({ onLevelSelect }) => {
     const [showLevelSelect, setShowLevelSelect] = useState(false);
+    const navigate = useNavigate();
 
     const handleStartGameClick = () => {
         setShowLevelSelect(true);
@@ -184,6 +188,11 @@ const Knowledge = ({ setCurrentRoute, onLevelSelect }) => {
                 <button className="start-game-button" onClick={handleStartGameClick}>
                     START THE GAME
                 </button>
+                
+                <div className="knowledge-query-section">
+                    <h2>Explore Kolam Knowledge</h2>
+                    <KnowledgeQuery />
+                </div>
             </div>
         </div>
     );

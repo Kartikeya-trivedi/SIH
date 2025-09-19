@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import quizData from './quizData';
 import './Quiz.css';
 
-const Quiz = ({ level, setCurrentRoute }) => {
+const Quiz = ({ level }) => {
     const [currentLevel, setCurrentLevel] = useState(level - 1);
     const [questionIndex, setQuestionIndex] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -10,6 +11,7 @@ const Quiz = ({ level, setCurrentRoute }) => {
     const [selectedAnswer, setSelectedAnswer] = useState(null); // Track the user's choice
     const [isAnswered, setIsAnswered] = useState(false);
     const [isLevelComplete, setIsLevelComplete] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const levelData = quizData[currentLevel];
@@ -47,7 +49,7 @@ const Quiz = ({ level, setCurrentRoute }) => {
             setQuestionIndex(0);
             setIsLevelComplete(false);
         } else {
-            setCurrentRoute('/knowledge');
+            navigate('/knowledge');
         }
     }
     

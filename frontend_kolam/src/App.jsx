@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Navbar from './components/navbar';
 import Home from './components/home';
 import Knowledge from './components/knowledge';
@@ -8,43 +9,34 @@ import AiRecreate from './components/AiRecreate';
 import Quiz from './components/quiz';
 
 function App() {
-  const [currentRoute, setCurrentRoute] = useState('/home');
   const [analysisData, setAnalysisData] = useState(null);
   const [quizLevel, setQuizLevel] = useState(1);
+  const navigate = useNavigate();
 
-  const handleAnalysisSuccess = (imageData) => {
-    setAnalysisData({ image: imageData });
-    setCurrentRoute('/analysis');
+  const handleAnalysisSuccess = (data) => {
+    console.log('App received analysis data:', data);
+    setAnalysisData(data); // Pass the complete data object directly
+    navigate('/analysis');
   };
 
   const handleLevelSelect = (level) => {
     setQuizLevel(level);
-    setCurrentRoute('/quiz');
-  };
-
-  const renderContent = () => {
-    switch (currentRoute) {
-      case '/knowledge':
-        return <Knowledge setCurrentRoute={setCurrentRoute} onLevelSelect={handleLevelSelect} />;
-      case '/recognize':
-        return <Recognize setCurrentRoute={setCurrentRoute} onAnalysisSuccess={handleAnalysisSuccess} />;
-      case '/analysis':
-        return <Analysis analysisData={analysisData} />;
-      case '/recreate':
-        return <AiRecreate />;
-       case '/quiz':
-        return <Quiz level={quizLevel} setCurrentRoute={setCurrentRoute} />;
-      case '/home':
-      default:
-        return <Home setCurrentRoute={setCurrentRoute} />;
-    }
+    navigate('/quiz');
   };
 
   return (
     <div className="App">
       <Navbar />
       <main>
-        {renderContent()}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/knowledge" element={<Knowledge onLevelSelect={handleLevelSelect} />} />
+          <Route path="/recognize" element={<Recognize onAnalysisSuccess={handleAnalysisSuccess} />} />
+          <Route path="/analysis" element={<Analysis analysisData={analysisData} />} />
+          <Route path="/recreate" element={<AiRecreate />} />
+          <Route path="/quiz" element={<Quiz level={quizLevel} />} />
+        </Routes>
       </main>
     </div>
   );

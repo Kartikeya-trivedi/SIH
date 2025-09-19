@@ -1,0 +1,50 @@
+.quiz-card {
+  background: #1a1a1a;
+  color: white;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 400px;
+  text-align: center;
+  margin: auto;
+}
+
+.quiz-card h2 {
+  font-size: 1.5rem;
+}
+
+.quiz-card h3 {
+  color: red;
+  margin: 0.5rem 0;
+}
+
+.question {
+  font-size: 1.2rem;
+  margin: 1.5rem 0;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.option-btn {
+  border: 2px solid white;
+  background: transparent;
+  padding: 1rem;
+  border-radius: 15px;
+  color: white;
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.option-btn:hover {
+  background: #333;
+}
+
+.opt-label {
+  color: red;
+  font-weight: bold;
+}

@@ -1,10 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 // This is the main landing page component.
-// It receives `setCurrentRoute` as a prop to handle navigation.
+// It now uses useNavigate from react-router-dom for navigation.
 
-const Home = ({ setCurrentRoute }) => {
+const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       <div className="home-container">
@@ -40,14 +43,14 @@ const Home = ({ setCurrentRoute }) => {
           </button>
 
           <div className="features-grid">
-            {/* These cards now act as buttons to navigate to different routes */}
-            <div className="feature-card feature-card-clickable" onClick={() => setCurrentRoute('/knowledge')}>
+            {/* These cards now use React Router's navigate */}
+            <div className="feature-card feature-card-clickable" onClick={() => navigate('/knowledge')}>
               <span>&#x1F4D6;</span> Test your knowledge and learn
             </div>
-            <div className="feature-card feature-card-clickable" onClick={() => setCurrentRoute('/recognize')}>
+            <div className="feature-card feature-card-clickable" onClick={() => navigate('/recognize')}>
               <span>&#x1F4F7;</span> Let AI Recognize
             </div>
-            <div className="feature-card feature-card-clickable" onClick={() => setCurrentRoute('/recreate')}>
+            <div className="feature-card feature-card-clickable" onClick={() => navigate('/recreate')}>
               <span>&#x2699;&#xFE0F;</span> Recreate or complete patterns
             </div>
           </div>
