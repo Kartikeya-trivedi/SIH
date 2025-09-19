@@ -32,13 +32,13 @@ const Home = ({ onNavigate }) => {
 
           <div className="home-cta-buttons">
             <button className="feature-card-cta" onClick={() => onNavigate('/knowledge')}>
-              <span>🧠</span> Test your knowledge and learn
+              <span></span> Test your knowledge and learn
             </button>
             <button className="feature-card-cta" onClick={() => onNavigate('/recognize')}>
-              <span>📷</span> Let AI Recognize
+              <span></span> Let AI Recognize
             </button>
             <button className="feature-card-cta" onClick={() => onNavigate('/recreate')}>
-              <span>✨</span> Recreate or complete patterns
+              <span></span> Recreate or complete patterns
             </button>
           </div>
 

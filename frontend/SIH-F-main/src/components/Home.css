@@ -54,7 +54,7 @@
 
 .description-box,
 .platform-description {
-  background-color: #F9F2E9;
+  background-color: #1E1E1E;
   border: 1px solid #e0d5c7;
   padding: 1rem;
   border-radius: 12px;
@@ -66,7 +66,7 @@
   margin: 0;
   font-family: 'Montserrat', sans-serif;
   line-height: 1.6;
-  color: #333;
+  color: hsl(0, 0%, 100%);
   font-size: 1rem;
 }
 
@@ -109,6 +109,9 @@
 .features-section {
     padding: 4rem 5%;
     background-color: #F9F2E9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .features-main-title {
@@ -117,6 +120,19 @@
     font-size: 2.8rem;
     color: #333;
     margin-bottom: 3rem;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.features-main-title::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(to right, transparent, #780000, transparent);
 }
 
 .features-grid {
@@ -124,16 +140,60 @@
     gap: 2rem;
 }
 
+/* Animation keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Apply animations to features */
+.feature-tile {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+/* Stagger the animations for each feature tile */
+.feature-tile:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.feature-tile:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.feature-tile:nth-child(3) {
+    animation-delay: 0.5s;
+}
+
+.feature-tile:nth-child(4) {
+    animation-delay: 0.7s;
+}
+
 .feature-tile {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
     align-items: center;
-    background-color: #F9F2E9;
+    background-color: #1E1E1E;
     border-radius: 20px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
     overflow: hidden;
     padding: 2rem;
+    transition: all 0.4s ease-in-out;
+    position: relative;
+    border: 1px solid transparent;
+}
+
+.feature-tile:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(120, 0, 0, 0.15);
+    border-color: rgba(120, 0, 0, 0.3);
 }
 
 .feature-tile.reverse {
@@ -150,8 +210,30 @@
     font-family: 'Montserrat', sans-serif;
     font-weight: 600;
     font-size: 1.5rem;
-    color: #2c2c2c;
+    color: #780000;
     margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.feature-content h3::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #780000;
+    transition: width 0.4s ease;
+}
+
+.feature-tile:hover .feature-content h3::after {
+    width: 100%;
+}
+
+.feature-tile:hover .feature-content h3 {
+    transform: translateX(5px);
 }
 
 .feature-content ul {
@@ -163,7 +245,24 @@
 .feature-content li {
     margin-bottom: 0.75rem;
     line-height: 1.6;
-    color: #555;
+    color: #ffffff;
+    opacity: 0.9;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    position: relative;
+    padding-left: 20px;
+}
+
+.feature-content li:before {
+    content: '•';
+    color: #780000;
+    position: absolute;
+    left: 0;
+    transition: transform 0.3s ease;
+}
+
+.feature-tile:hover .feature-content li {
+    opacity: 1;
+    transform: translateX(5px);
 }
 
 .feature-image-placeholder {
@@ -176,6 +275,30 @@
     justify-content: center;
     font-size: 1.5rem;
     color: #aaa;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.feature-image-placeholder::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(120, 0, 0, 0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.feature-tile:hover .feature-image-placeholder {
+    transform: scale(1.02);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.feature-tile:hover .feature-image-placeholder::before {
+    opacity: 1;
 }
 
 /* Responsive adjustments */
