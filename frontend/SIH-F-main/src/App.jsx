@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/home';
 import Knowledge from './components/knowledge';
+import TestKnowledge from './components/TestKnowledge';
+import SimpleKnowledge from './components/SimpleKnowledge';
+import KnowledgeFixed from './components/KnowledgeFixed';
 import Recognize from './components/recognize';
 import AiRecreate from './components/AiRecreate';
 import Analysis from './components/analysis';
@@ -9,69 +13,39 @@ import Quiz from './components/quiz';
 import './App.css';
 
 function App() {
-  // Initialize route from the browser's current URL path
-  const [route, setRoute] = useState(window.location.pathname);
   const [analysisData, setAnalysisData] = useState(null);
   const [quizLevel, setQuizLevel] = useState(1);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // Effect to handle browser back/forward navigation
-  useEffect(() => {
-    const handlePopState = () => {
-      setRoute(window.location.pathname);
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
-  }, []);
-
-  const handleNavigate = (newRoute) => {
-    setRoute(newRoute);
-    // Update the browser's URL without a full page reload
-    window.history.pushState(null, '', newRoute);
+  const handleNavigate = (path) => {
+    navigate(path);
     window.scrollTo(0, 0);
   };
 
-  /**
-   * UPDATED: Now accepts the full analysis object from the Recognize component
-   * @param {object} analysisResult - Object containing image and prediction data
-   */
   const handleAnalysisSuccess = (analysisResult) => {
     setAnalysisData(analysisResult);
-    handleNavigate('/analysis');
+    navigate('/analysis');
   };
 
   const handleLevelSelect = (level) => {
     setQuizLevel(level);
-    handleNavigate('/quiz');
-  };
-
-  const renderContent = () => {
-    // Now rendering is based on the 'route' state, which syncs with the URL
-    switch (route) {
-      case '/knowledge':
-        return <Knowledge onLevelSelect={handleLevelSelect} />;
-      case '/recognize':
-        return <Recognize onAnalysisSuccess={handleAnalysisSuccess} onNavigate={handleNavigate} />;
-      case '/recreate':
-        return <AiRecreate />;
-      case '/analysis':
-        return <Analysis analysisData={analysisData} onNavigate={handleNavigate} />;
-      case '/quiz':
-        return <Quiz level={quizLevel} />;
-      case '/':
-      default:
-        // Default to home for any unrecognized routes
-        return <Home onNavigate={handleNavigate} />;
-    }
+    navigate('/quiz');
   };
 
   return (
     <div className="App">
-      <Navbar onNavigate={handleNavigate} currentRoute={route} />
+      <Navbar currentRoute={location.pathname} />
       <main>
-        {renderContent()}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/knowledge" element={<KnowledgeFixed onLevelSelect={handleLevelSelect} />} />
+          <Route path="/recognize" element={<Recognize onAnalysisSuccess={handleAnalysisSuccess} onNavigate={handleNavigate} />} />
+          <Route path="/recreate" element={<AiRecreate />} />
+          <Route path="/analysis" element={<Analysis analysisData={analysisData} onNavigate={handleNavigate} />} />
+          <Route path="/quiz" element={<Quiz level={quizLevel} />} />
+          <Route path="*" element={<Home />} />
+        </Routes>
       </main>
     </div>
   );

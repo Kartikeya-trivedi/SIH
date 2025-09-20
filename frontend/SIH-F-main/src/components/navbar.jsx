@@ -1,51 +1,42 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Navbar.css';
 
-const Navbar = ({ onNavigate, currentRoute }) => {
-  // Helper function to prevent default link behavior and navigate
-  const handleNavClick = (e, path) => {
-    e.preventDefault();
-    onNavigate(path);
-  };
-
+const Navbar = ({ currentRoute }) => {
   return (
     <nav className="navbar-container">
       <ul className="navbar-links">
         <li>
-          <a
-            href="/"
-            onClick={(e) => handleNavClick(e, '/')}
+          <Link
+            to="/"
             className={`nav-link ${currentRoute === '/' ? 'active' : ''}`}
           >
             Home
-          </a>
+          </Link>
         </li>
         <li>
-          <a
-            href="/knowledge"
-            onClick={(e) => handleNavClick(e, '/knowledge')}
+          <Link
+            to="/knowledge"
             className={`nav-link ${currentRoute === '/knowledge' ? 'active' : ''}`}
           >
             Knowledge
-          </a>
+          </Link>
         </li>
         <li>
-          <a
-            href="/recognize"
-            onClick={(e) => handleNavClick(e, '/recognize')}
+          <Link
+            to="/recognize"
             className={`nav-link ${currentRoute === '/recognize' ? 'active' : ''}`}
           >
             Recognize
-          </a>
+          </Link>
         </li>
         <li>
-          <a
-            href="/recreate"
-            onClick={(e) => handleNavClick(e, '/recreate')}
+          <Link
+            to="/recreate"
             className={`nav-link ${currentRoute === '/recreate' ? 'active' : ''}`}
           >
             Recreate
-          </a>
+          </Link>
         </li>
       </ul>
     </nav>

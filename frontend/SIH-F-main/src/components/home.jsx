@@ -1,7 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
-const Home = ({ onNavigate }) => {
+const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       <div className="home-container">
@@ -31,13 +34,13 @@ const Home = ({ onNavigate }) => {
           </div>
 
           <div className="home-cta-buttons">
-            <button className="feature-card-cta" onClick={() => onNavigate('/knowledge')}>
+            <button className="feature-card-cta" onClick={() => navigate('/knowledge')}>
               <span></span> Test your knowledge and learn
             </button>
-            <button className="feature-card-cta" onClick={() => onNavigate('/recognize')}>
+            <button className="feature-card-cta" onClick={() => navigate('/recognize')}>
               <span></span> Let AI Recognize
             </button>
-            <button className="feature-card-cta" onClick={() => onNavigate('/recreate')}>
+            <button className="feature-card-cta" onClick={() => navigate('/recreate')}>
               <span></span> Recreate or complete patterns
             </button>
           </div>

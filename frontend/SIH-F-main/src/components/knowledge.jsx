@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title } from 'chart.js';
 import KnowledgeQuery from './knowledge-query';
@@ -12,7 +11,6 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarEle
 const Knowledge = ({ onLevelSelect }) => {
     const [showLevelSelect, setShowLevelSelect] = useState(false);
     const [debugInfo, setDebugInfo] = useState(null);
-    const navigate = useNavigate();
 
     // Collect debug information about the environment
     useEffect(() => {
